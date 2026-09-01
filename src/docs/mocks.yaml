@@ -1,0 +1,123 @@
+paths:
+  /api/mocks/mocking-users:
+    get:
+      tags:
+        - Mocks
+      summary: Crea Usuarios Mocks
+      description: Crea Usuarios Mocks y los devuelve. NO los guarda en db.
+      parameters:
+        - name: qty
+          in: query
+          required: false
+          description: Cantidad de Usuarios Mocks a Crear. Si se deja Vacío Genera 10
+          schema:
+            type: number
+            default: 10
+      responses: 
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserCreate"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+
+  /api/mocks/mocking-orders:
+    get:
+      tags:
+        - Mocks
+      summary: Crea Pedidos Mocks
+      description: Crea Pedidos Mocks y los devuelve. NO los guarda en db.
+      parameters:
+        - name: qty
+          in: query
+          required: false
+          description: Cantidad de Pedidos Mocks a Crear. Si se deja Vacío Genera 10
+          schema:
+            type: number
+            default: 10
+      responses: 
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Order"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+
+  /api/mocks/mocking-deliveries:
+    get:
+      tags:
+        - Mocks
+      summary: Crea Envíos Mocks
+      description: Crea Envíos Mocks y los devuelve. NO los guarda en db.
+      parameters:
+        - name: qty
+          in: query
+          required: false
+          description: Cantidad de Envíos Mocks a Crear. Si se deja Vacío Genera 10
+          schema:
+            type: number
+            default: 10
+      responses: 
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Delivery"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+
+  /api/mocks/generateData:
+    post:
+      tags:
+        - Mocks
+      summary: Crea Usuarios o Pedidos Mocks
+      description: >
+        Crea Usuarios o Pedidos Mocks, los devuelve y los guarda en db.
+        Para elegir que generar entre Usuarios, Pedidos o Envíos se utiliza el query "type"
+      parameters:
+        - name: qty
+          in: query
+          required: false
+          description: Cantidad de Mocks a Crear. Si se deja Vacío Genera 10
+          schema:
+            type: number
+            default: 10
+        - name: type
+          in: query
+          required: true
+          description: >
+            Elegir entre "orders", "users" o "deliveries" para Seleccionar entre Generar Pedidos o Usuarios Mocks.
+          schema:
+            type: string
+            default: users
+      responses: 
+        "201":
+          description: Mocks Creados y Guardados en db
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserCreate"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"

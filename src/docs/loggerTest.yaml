@@ -1,0 +1,20 @@
+paths:
+  /logger-test:
+    get:
+      summary: Probar niveles del logger
+      description: >
+        Realiza una Prueba de lanzamiento de todos los tipos de Logger.
+        SOLO testing, no es una funcionalidad de negocio.
+      tags:
+        - Logger
+      responses:
+        "200":
+          description: Logs generados correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Fin prueba logger

@@ -1,0 +1,2 @@
+Carpeta de logs de errores.
+Solo [error] y [fatal]

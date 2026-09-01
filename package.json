@@ -1,0 +1,32 @@
+{
+  "name": "entrega-7",
+  "version": "1.6.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "test": "mocha --file test/setup.js \"test/**/**.test.js\" --timeout 10000",
+    "dev": "node --watch ./src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.9.2",
+    "multer": "^2.3.0",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.6.0",
+    "chai": "^6.2.2",
+    "mocha": "^11.8.0",
+    "supertest": "^7.2.2"
+  }
+}

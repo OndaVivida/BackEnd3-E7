@@ -1,0 +1,106 @@
+paths:
+  /api/orders:
+    get:
+      tags:
+        - Orders
+      summary: Obtiene TODOS los Pedidos
+      responses:
+        "200":
+          description: Lista de Pedidos Obtenida Correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Order"
+                      
+    post:
+      tags:
+        - Orders
+      summary: Crea un Pedido
+      description: Crea un Pedido Nuevo. El Cuerpo de la Peticion debe Contener todos los Datos del Pedido.
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        "201":
+          description: Pedido Creado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Orden Creada
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/Order"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+
+  /api/orders/{id}:
+    get:
+      tags:
+        - Orders
+      summary: Obtiene un pedido por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del pedido
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Pedido Obtenido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Order"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+        "404":
+          $ref: "#/components/errorResponses/Error_ORDER_NOT_FOUND"
+
+  /api/orders/{id}/status/{status}:
+    patch:
+      tags:
+        - Orders
+      summary: Actualiza el Status de un Pedido
+      parameters:
+        - name: id
+          in: path
+          required: true
+        - name: status
+          in: path
+          required: true
+          description: ID de la Orden
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Orden Actualizada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Orden Actualizada
+                  data:
+                    $ref: "#/components/schemas/Order"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+        "404":
+          $ref: "#/components/errorResponses/Error_ORDER_NOT_FOUND"

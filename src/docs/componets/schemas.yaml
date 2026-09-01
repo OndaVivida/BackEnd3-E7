@@ -1,0 +1,134 @@
+components:
+  schemas:
+    OrderItem:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Duff beer six pack
+        quantity:
+          type: number
+          example: 6
+        price:
+          type: number
+          example: 18000
+
+    Order:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 7d37fd2dabe59215afb6cffb
+        customer:
+          type: string
+          example: 7d37fd2dabe59215afb6cffc
+        store_name:
+          type: string
+          example: MOE's Tavern
+        delivery_address:
+          type: string
+          example: Av. Siempre Viva 742
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+        total:
+          type: number
+          example: 3000
+        status:
+          type: string
+          example: created
+        priority:
+          type: string
+          example: normal
+
+    UserDocuments:
+      type: object
+      properties:
+        fileName:
+          type: string
+          example: nombre-archivo-adjunto.webp
+        path:
+          type: string
+          example: /uploads
+        type:
+          type: string
+          example: documento-usuario
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 7d37fd2dabe59215afb6cffb
+        first_name:
+          type: string
+          example: Cosme
+        last_name:
+          type: string
+          example: Fulanito
+        email:
+          type: string
+          format: email
+          example: correo_de@ejemplo.com
+        documents:
+          $ref: "#/components/schemas/UserDocuments"
+        role:
+          type: number
+          example: user
+
+    UserCreate:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 7d37fd2dabe59215afb6cffb
+        first_name:
+          type: string
+          example: Cosme
+        last_name:
+          type: string
+          example: Fulanito
+        email:
+          type: string
+          format: email
+          example: correo_de@ejemplo.com
+        password:
+          type: string
+          format: password
+          example: 2b$04Pa7jbeñ9.kPb6fñ9RqQTtL36
+        documents:
+          $ref: "#/components/schemas/UserDocuments"
+
+    DeliveryDeliveredProof:
+      type: object
+      properties:
+        fileName:
+          type: string
+          example: nombre-archivo-adjunto.webp
+        path:
+          type: string
+          example: /uploads
+        type:
+          type: string
+          example: evidencia-entrega
+
+    Delivery:
+      type: object
+      properties:
+        order:
+          type: string
+          example: 7d37fd2dabe59215afb6cffb
+        driver:
+          type: string
+          example: 7d37fd2dabe59215afb6cffc
+        picked_up_at:
+          type: string
+          format: date-time
+          example: 2026-09-01T17:53:59.999Z
+        delivered_at:
+          type: string
+          format: date-time
+          example: 2026-09-01T18:00:00.000Z
+        delivered_proof:
+          $ref: "#/components/schemas/DeliveryDeliveredProof"

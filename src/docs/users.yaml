@@ -1,0 +1,119 @@
+paths:
+  /api/users:
+    get:
+      tags:
+        - Users
+      summary: Obtiene TODOS los Usuarios
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+
+    post:
+      tags:
+        - Users
+      summary: Crea un Usuario Nuevo
+      description: El Cuerpo de la Peticion debe Contener todos los Datos de la Cuenta. El email es unico.
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreate"
+      responses: 
+        "201":
+          description: Usuario Creado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Usuario Creado
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+        "409":
+          $ref: "#/components/errorResponses/Error_DUPLICATE_KEY"
+
+  /api/users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Obtiene un Usuario por id
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/User"
+        "404":
+          $ref: "#/components/errorResponses/Error_USER_NOT_FOUND"
+
+    patch:
+      tags:
+        - Users
+      summary: Actualiza un Usuario por id
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Usuario Actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Usuario Actualizado
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+        "404":
+          $ref: "#/components/errorResponses/Error_USER_NOT_FOUND"
+
+    delete:
+      tags:
+        - Users
+      summary: Elimina un Usuario por id
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Usuario Eliminado
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+        "404":
+          $ref: "#/components/errorResponses/Error_USER_NOT_FOUND"

@@ -1,0 +1,26 @@
+export const USER_ROLES = Object.freeze({
+    ADMIN: 'admin',
+    CUSTOMER: 'user',
+    DRIVER: 'driver',
+    STORE: 'store'
+})
+
+export const ORDER_STATUS = Object.freeze({
+    CREATED: 'created',
+    ASSIGNED: 'assigned',
+    PICKED_UP: 'picked_up',
+    IN_TRANSIT: 'in_transit',
+    DELIVERED: 'delivered',
+    CANCELLED: 'cancelled'
+})
+
+export const DELIVERY_PRIORITY = Object.freeze({
+    LOW: 'low',
+    NORMAL: 'normal',
+    HIGH: 'high'
+})
+
+export const DOCUMENT_TYPES = Object.freeze({
+    USER_DOCUMENT: "documento-usuario",
+    DELIVERY_PROOF: "evidencia-entrega"
+})

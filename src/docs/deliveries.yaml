@@ -1,0 +1,103 @@
+paths:
+  /api/deliveries:
+    get:
+      summary: Obtiene TODOS las Entregas
+      tags:
+        - Deliveries
+      responses:
+        "200":
+          description: Lista de Entregas Obtenida Correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Delivery"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+
+    post:
+      summary: Crea una Entrega
+      tags:
+        - Deliveries
+      description: >
+        Crea una Entrega Nueva. 
+        El Cuerpo de la Peticion debe Contener Obligatoriamente "order".
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Delivery"
+      responses:
+        "201":
+          description: Entrega Creada Correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Delivery"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+
+  /api/deliveries/{id}:
+    get:
+      summary: Obtiene una Entrega por ID
+      tags:
+        - Deliveries
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la Entrega
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Entrega Obtenida Correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Delivery"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+        "404":
+          $ref: "#/components/errorResponses/Error_DELIVERY_NOT_FOUND"
+
+    patch:
+      summary: Actualiza una Entrega
+      tags:
+        - Deliveries
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la Entrega
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Entrega Actualizada Correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Delivery"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
+        "404":
+          $ref: "#/components/errorResponses/Error_DELIVERY_NOT_FOUND"
