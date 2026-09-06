@@ -27,6 +27,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UserCreate"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/UserCreate_MP"
       responses: 
         "201":
           description: Usuario Creado
@@ -65,6 +68,8 @@ paths:
                   data:
                     type: object
                     $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/errorResponses/Error_INVALID_INPUT"
         "404":
           $ref: "#/components/errorResponses/Error_USER_NOT_FOUND"
 
@@ -76,6 +81,15 @@ paths:
         - name: id
           in: path
           required: true
+      requestBody: 
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/UserUpdate_MP"
       responses:
         "200":
           description: Usuario Actualizado

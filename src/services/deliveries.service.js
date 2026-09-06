@@ -21,21 +21,15 @@ class DeliveryService {
     }
 
     static async updateById(id, data) {
-        if (data.files) {
-            let tipo
-            if (archivo.fieldname === "delivered") {
-                tipo = DOCUMENT_TYPES.DELIVERY_PROOF
-            } else {
-                tipo = undefined
-            }
-            const documentos = {
-                fileName: archivo.filename ?? archivo.fileName,
+        if (data.file) {
+            const archivo = data.file
+            const documento = {
+                fileName: archivo.filename,
                 path: archivo.path,
-                type: tipo
+                type: DOCUMENT_TYPES.DELIVERY_PROOF
             }
-            data.files = documentos
-            await DeliveryRepository.addDocument(id, data.files)
-            delete data.files
+            data.delivered_proof = documento
+            delete data.file
         }
         const delivery = await DeliveryRepository.updateById(id, data)
         if (!delivery) {

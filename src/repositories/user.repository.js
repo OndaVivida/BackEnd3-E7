@@ -32,9 +32,8 @@ class UserRepository {
     }
 
     static async addDocument(id, document) {
-        return await UsersModel.findByIdAndUpdate(id, {$push: {documents: document}}, 
-            {returnDocument: "after", runValidators: true}
-        )
+        logger.info("Solicitud de actualizacion de Dcoumentos de Usuario")
+        return await UsersModel.findByIdAndUpdate(id, {$push: {documents: document}})
     }
 }
 

@@ -1,6 +1,7 @@
 import CustomError from "../errors/custom.error.js"
 import ERROR_CODES from "../errors/codes.error.js"
 import logger from "../config/logger.js"
+import deleteMulterUploads from "../utils/eliminarUploadsMulter.js"
 
 function errorHandler(err, req, res, next) {
     const isCustomError = err instanceof CustomError
@@ -12,8 +13,12 @@ function errorHandler(err, req, res, next) {
         path: req.path
     }
 
+    if (req.file || req.files) {
+        deleteMulterUploads(req.file ?? req.files)
+    }
+
     if (customError.statusCode >= 500) {
-        metadatos.message = `${metadatos.message}.\n${err.name}: ${err.message}.\n`
+        metadatos.message = `${metadatos.message}.\n${err.name}: ${err.message}.\n${err.stack}\nStack:`
         logger.error(customError.name, {...metadatos, stack: customError.stack}) 
     } else {
         logger.warn(customError.name, metadatos)
@@ -24,6 +29,9 @@ function errorHandler(err, req, res, next) {
 }
 
 function errorMapper(error) {
+    if (error.name === "MulterError") {
+        return multerErrors(error)
+    }
     if (error.name === "CastError") {
         return new CustomError(ERROR_CODES.INVALID_ID)
     }
@@ -38,6 +46,22 @@ function errorMapper(error) {
     }
 
     return new CustomError(ERROR_CODES.INTERNAL_SERVER_ERROR)
+}
+
+function multerErrors(error) {
+    switch (error.code) {
+        case "LIMIT_FILE_SIZE":
+            return new CustomError(ERROR_CODES.FILE_TOO_LARGE)
+            
+        case "LIMIT_UNEXPECTED_FILE":
+            return new CustomError(ERROR_CODES.INVALID_DOCUMENT_INPUT_FIELD)
+            
+        case "LIMIT_FILE_COUNT":
+            return new CustomError(ERROR_CODES.LIMIT_FILE_COUNT)
+            
+        default:
+            return new CustomError(ERROR_CODES.UPLOAD_ERROR)
+    }
 }
 
 export default errorHandler

@@ -3,7 +3,10 @@ import supertest from "supertest"
 import app from "../../src/app.js"
 import MockService from "../../src/mocks/services/mocks.service.js"
 import { USER_ROLES } from "../../src/constants/index.js"
+import { fileURLToPath } from 'url'
+import path from 'path'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const request = supertest(app)
 
 describe("GET /api/users", function() {
@@ -60,11 +63,13 @@ describe("POST /api/users", function() {
             .field("email", mockUser.email)
             .field("password", mockUser.password)
             .field("role", mockUser.role)
-            .attach("documents", /*"RUTA"*/)
+            .attach("documents", path.join(__dirname, "../../src/uploads/test.jpg"))
         expect(respuesta.statusCode).to.be.equal(201)
         expect(respuesta.type).to.equal("application/json")
         expect(respuesta.body).to.have.property("data")
         expect(respuesta.body.data).to.have.property("documents")
+        expect(respuesta.body.data.documents).to.be.an("array")
+        expect(respuesta.body.data.documents[0]).to.have.property("path")
     })
 
     it("Debería devolver un error 400", async function() {
@@ -109,12 +114,14 @@ describe("PATCH /api/users/", function() {
     it("Debería actualizar un usuario usando multipart/form-data", async function() {
         const respuesta = await request.patch(`/api/users/${this.mockData._id}`)
             .field("role", USER_ROLES.ADMIN)
-            .attach("documents", /*"RUTA"*/)
+            .attach("documents", path.join(__dirname, "../../src/uploads/test.jpg"))
         expect(respuesta.statusCode).to.be.equal(200)
         expect(respuesta.type).to.equal("application/json")
         expect(respuesta.body).to.have.property("data")
         expect(respuesta.body.data).to.have.property("role", "admin")
         expect(respuesta.body.data).to.have.property("documents")
+        expect(respuesta.body.data.documents).to.be.an("array")
+        expect(respuesta.body.data.documents[0]).to.have.property("path")
     })
 
     it("Debería devolver un error 404", async function() {
@@ -134,6 +141,26 @@ describe("PATCH /api/users/", function() {
         expect(respuesta.status).to.equal(400)
         expect(respuesta.type).to.equal("application/json")
         expect(respuesta.body).to.have.property("error")
+        expect(respuesta.body).to.not.have.property("data")
+    })
+
+    it("Debería devolver un error 400 INVALID_DOCUMENT_INPUT_FIELD multipart/form-data", async function() {
+        const respuesta = await request.patch(`/api/users/${this.mockData._id}`)
+            .field("role", USER_ROLES.ADMIN)
+            .attach("NoEsNombre", path.join(__dirname, "../../src/uploads/test.jpg"))
+        expect(respuesta.statusCode).to.be.equal(400)
+        expect(respuesta.type).to.equal("application/json")
+        expect(respuesta.body).to.have.property("error", "INVALID_DOCUMENT_INPUT_FIELD")
+        expect(respuesta.body).to.not.have.property("data")
+    })
+
+    it("Debería devolver un error 400 INVALID_FILE_TYPE multipart/form-data", async function() {
+        const respuesta = await request.patch(`/api/users/${this.mockData._id}`)
+            .field("role", USER_ROLES.ADMIN)
+            .attach("documents", path.join(__dirname, "../../src/uploads/test-E.docx"))
+        expect(respuesta.statusCode).to.be.equal(400)
+        expect(respuesta.type).to.equal("application/json")
+        expect(respuesta.body).to.have.property("error", "INVALID_FILE_TYPE")
         expect(respuesta.body).to.not.have.property("data")
     })
 })

@@ -25,7 +25,7 @@ class MockService {
                     return {
                         fileName: faker.science.chemicalElement().toString(),
                         path: faker.system.filePath(),
-                        type: faker.helpers.arrayElement([DOCUMENT_TYPES.USER_DOCUMENT, DOCUMENT_TYPES.DRIVER_LICENSE])
+                        type: DOCUMENT_TYPES.USER_DOCUMENT
                     }
                 }),
                 role: faker.helpers.arrayElement(roles)

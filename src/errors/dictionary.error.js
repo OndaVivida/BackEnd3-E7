@@ -71,11 +71,19 @@ const errorsDictionary = Object.freeze({
     },
     [ERROR_CODES.FILE_TOO_LARGE]: {
         statusCode: 400,
-        message: "Archivo muy grande"
+        message: "El Archivo es muy grande"
     },
     [ERROR_CODES.INVALID_DOCUMENT_TYPE]: {
         statusCode: 400,
         message: "Tipo de documento inválido"
+    },
+    [ERROR_CODES.LIMIT_FILE_COUNT]: {
+        statusCode: 400,
+        message: "Se enviaron demasiados archivos"
+    },
+    [ERROR_CODES.INVALID_DOCUMENT_INPUT_FIELD]: {
+        statusCode: 400,
+        message: "Se recibió un archivo no esperado"
     },
     [ERROR_CODES.UPLOAD_ERROR]: {
         statusCode: 500,

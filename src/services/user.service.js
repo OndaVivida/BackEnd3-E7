@@ -19,21 +19,16 @@ class UserService {
     }
 
     static async create(data) {
-        if (data.documents && typeof(data.documents) == "array") {
-            const documentos = (data.documents).map(archivo => {
-                let tipo
-                if (archivo.fieldname === "documents") {
-                    tipo = DOCUMENT_TYPES.USER_DOCUMENT
-                } else {
-                    tipo = undefined
-                }
+        if (data.files) {
+            const documentos = (data.files).map(archivo => {
                 return {
-                    fileName: archivo.filename ?? archivo.fileName,
+                    fileName: archivo.filename,
                     path: archivo.path,
-                    type: tipo
+                    type: DOCUMENT_TYPES.USER_DOCUMENT
                 }
             })
             data.documents = documentos
+            delete data.files
         }
         let { password } = data
         password = bcrypt.hashSync(password, 10)
@@ -44,25 +39,21 @@ class UserService {
     }
 
     static async updateById(id, data) {
-
-        if (data.files && typeof(data.files) == "array") {
+        if (data.files) {
             const documentos = (data.files).map(archivo => {
-                let tipo
-                if (archivo.fieldname === "documents") {
-                    tipo = DOCUMENT_TYPES.USER_DOCUMENT
-                } else {
-                    tipo = undefined
-                }
                 return {
-                    fileName: archivo.filename ?? archivo.fileName,
+                    fileName: archivo.filename,
                     path: archivo.path,
-                    type: tipo
+                    type: DOCUMENT_TYPES.USER_DOCUMENT
                 }
             })
-            data.files = documentos
-            await UserRepository.addDocument(id, data.files)
+            const usuario = await UserRepository.addDocument(id, documentos)
+            if (!usuario) {
+                throw new CustomError(ERROR_CODES.USER_NOT_FOUND)
+            }
             delete data.files
         }
+        delete data.email
         const usuario = await UserRepository.updateById(id, data)
         if (!usuario) {
             throw new CustomError(ERROR_CODES.USER_NOT_FOUND)

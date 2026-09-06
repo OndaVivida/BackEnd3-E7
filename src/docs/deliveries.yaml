@@ -85,6 +85,15 @@ paths:
           description: ID de la Entrega
           schema:
             type: string
+      requestBody: 
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Delivery"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Delivery_MP"
       responses:
         "200":
           description: Entrega Actualizada Correctamente

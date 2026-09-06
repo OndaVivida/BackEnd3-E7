@@ -27,12 +27,6 @@ class DeliveryRepository {
         logger.info("Solicitud de Actualización de Delivery")
         return await DeliveryModel.findByIdAndUpdate(id, data, {returnDocument: "after", runValidators: true}).lean()
     }
-
-    static async addDocument(id, delivered_proof) {
-        return await UsersModel.findByIdAndUpdate(id, {$push: {delivered_proof: delivered_proof}}, 
-            {returnDocument: "after", runValidators: true}
-        )
-    }
 }
 
 export default DeliveryRepository

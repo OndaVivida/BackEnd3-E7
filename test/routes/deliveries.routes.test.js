@@ -2,7 +2,10 @@ import { expect } from "chai"
 import supertest from "supertest"
 import app from "../../src/app.js"
 import MockService from "../../src/mocks/services/mocks.service.js"
+import { fileURLToPath } from 'url'
+import path from 'path'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const request = supertest(app)
 
 describe("GET /api/deliveries", function() {
@@ -64,18 +67,18 @@ describe("PATCH /api/deliveries", function() {
 
     it("Debería actualizar un pedido usando JSON", async function() {
         const respuesta = await request.patch(`/api/deliveries/${this.mockData._id}`).send({
-            picked_up_at: "2026-09-30T23:59:59.000Z"
+            picked_up_at: "2026-09-15T12:00:00.000Z"
         })
         expect(respuesta.statusCode).to.be.equal(200)
         expect(respuesta.type).to.equal("application/json")
         expect(respuesta.body).to.have.property("data")
-        expect(respuesta.body.data).to.have.property("picked_up_at", "2026-09-30T23:59:59.000Z")
+        expect(respuesta.body.data).to.have.property("picked_up_at", "2026-09-15T12:00:00.000Z")
     })
 
     it("Debería actualizar un pedido usando multipart/form-data", async function() {
         const respuesta = await request.patch(`/api/deliveries/${this.mockData._id}`)
             .field("picked_up_at", "2026-09-30T23:59:59.000Z")
-            .attach("delivered", /*"RUTA"*/)
+            .attach("delivered", path.join(__dirname, "../../src/uploads/test-2.jpg"))
         expect(respuesta.statusCode).to.be.equal(200)
         expect(respuesta.type).to.equal("application/json")
         expect(respuesta.body).to.have.property("data")
@@ -110,6 +113,37 @@ describe("PATCH /api/deliveries", function() {
         expect(respuesta.status).to.equal(400)
         expect(respuesta.type).to.equal("application/json")
         expect(respuesta.body).to.have.property("error")
+        expect(respuesta.body).to.not.have.property("data")
+    })
+
+    it("Debería devolver un error 400 INVALID_DOCUMENT_INPUT_FIELD multipart/form-data", async function() {
+        const respuesta = await request.patch(`/api/deliveries/${this.mockData._id}`)
+            .field("picked_up_at", "2026-09-30T23:59:59.000Z")
+            .attach("deliveredn't", path.join(__dirname, "../../src/uploads/test-2.jpg"))
+        expect(respuesta.statusCode).to.be.equal(400)
+        expect(respuesta.type).to.equal("application/json")
+        expect(respuesta.body).to.have.property("error", "INVALID_DOCUMENT_INPUT_FIELD")
+        expect(respuesta.body).to.not.have.property("data")
+    })
+
+    it("Debería devolver un error 400 INVALID_FILE_TYPE multipart/form-data", async function() {
+        const respuesta = await request.patch(`/api/deliveries/${this.mockData._id}`)
+            .field("picked_up_at", "2026-09-30T23:59:59.000Z")
+            .attach("delivered", path.join(__dirname, "../../src/uploads/test-E.docx"))
+        expect(respuesta.statusCode).to.be.equal(400)
+        expect(respuesta.type).to.equal("application/json")
+        expect(respuesta.body).to.have.property("error", "INVALID_FILE_TYPE")
+        expect(respuesta.body).to.not.have.property("data")
+    })
+
+    it("Debería devolver un error 400 INVALID_DOCUMENT_INPUT_FIELD multipart/form-data", async function() {
+        const respuesta = await request.patch(`/api/deliveries/${this.mockData._id}`)
+            .field("picked_up_at", "2026-09-30T23:59:59.000Z")
+            .attach("delivered", path.join(__dirname, "../../src/uploads/test-2.jpg"))
+            .attach("delivered", path.join(__dirname, "../../src/uploads/test-2.jpg"))
+        expect(respuesta.statusCode).to.be.equal(400)
+        expect(respuesta.type).to.equal("application/json")
+        expect(respuesta.body).to.have.property("error", "INVALID_DOCUMENT_INPUT_FIELD")
         expect(respuesta.body).to.not.have.property("data")
     })
 })

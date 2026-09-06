@@ -28,8 +28,8 @@ class UserController {
             if (!first_name || !last_name || !email || !password) {
                 throw new CustomError(ERROR_CODES.INVALID_INPUT, "Parametros faltantes")
             }
-            const usuarioEntrada = {first_name, last_name, email, password, documents: req.files ?? documents}
-            const usuario = await UserService.create(usuarioEntrada)
+            req.body.files = req.files
+            const usuario = await UserService.create(req.body)
             res.status(201).json({message: "Usuario Creado", data: usuario})
         } catch (error) {
             next(error)
@@ -38,6 +38,16 @@ class UserController {
 
     static async updateById(req, res, next) {
         try {
+            if (req.body) {
+                req.body.files = req.files
+                for (const propiedad in req.body) {
+                    if (!req.body[propiedad]) {
+                        delete req.body[propiedad]
+                    }
+                }
+            } else {
+                throw new CustomError(ERROR_CODES.INVALID_INPUT)
+            }
             const usuario = await UserService.updateById(req.params.id, req.body)
             res.status(200).json({message: "Usuario Actualizado", data: usuario})
         } catch (error) {

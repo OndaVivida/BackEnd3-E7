@@ -22,7 +22,7 @@ function existeCarpeta(carpeta) {
 }
 
 function obtenerCarpetaDestino(fieldname) {
-    if (fieldname === "delivered_proof") {
+    if (fieldname === "delivered") {
         return "/proofs"
     }
     return "/documents"
@@ -54,6 +54,7 @@ export const uploader = multer({
     storage,
     fileFilter,
     limits: {
-        fileSize: 1024 * 1024 * 5
+        fileSize: 1024 * 1024 * 5,
+        files: 3
     },
 })

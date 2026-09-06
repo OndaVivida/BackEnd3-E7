@@ -39,6 +39,16 @@ class DeliveryController {
 
     static async updateById(req, res, next) {
         try {
+            if (req.body) {
+                req.body.file = req.file
+                for (const propiedad in req.body) {
+                    if (!req.body[propiedad]) {
+                        delete req.body[propiedad]
+                    }
+                }
+            } else {
+                throw new CustomError(ERROR_CODES.INVALID_INPUT)
+            }
             const delivery = await DeliveryService.updateById(req.params.id, req.body)
             res.status(200).json({message: "Delivery Actualizado", data: delivery})
         } catch (error) {
